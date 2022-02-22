@@ -31,11 +31,9 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 #if CORE || GDI
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using GdiFontFamily = System.Drawing.FontFamily;
-using GdiFont = System.Drawing.Font;
-using GdiFontStyle = System.Drawing.FontStyle;
+using GdiFontFamily = SixLabors.Fonts.FontFamily;
+using GdiFont = SixLabors.Fonts.Font;
+using GdiFontStyle = SixLabors.Fonts.FontStyle;
 #endif
 #if WPF
 using System.Windows;
@@ -75,8 +73,8 @@ namespace PdfSharp.Drawing
         //
         // * Each XGlyphTypeface can belong to one or more XFont objects.
         // * An XGlyphTypeface hold an XFontFamily.
-        // * XGlyphTypeface hold a reference to an OpenTypeFontface. 
-        // * 
+        // * XGlyphTypeface hold a reference to an OpenTypeFontface.
+        // *
         //
 
         const string KeyPrefix = "tk:";  // "typeface key"
@@ -260,9 +258,9 @@ namespace PdfSharp.Drawing
 
             // Check if styles must be simulated.
             XStyleSimulations styleSimulations = XStyleSimulations.None;
-            if (gdiFont.Bold && !fontSource.Fontface.os2.IsBold)
+            if (gdiFont.IsBold && !fontSource.Fontface.os2.IsBold)
                 styleSimulations |= XStyleSimulations.BoldSimulation;
-            if (gdiFont.Italic && !fontSource.Fontface.os2.IsItalic)
+            if (gdiFont.IsItalic && !fontSource.Fontface.os2.IsItalic)
                 styleSimulations |= XStyleSimulations.ItalicSimulation;
 
             glyphTypeface = new XGlyphTypeface(typefaceKey, fontFamily, fontSource, styleSimulations, gdiFont);
@@ -475,7 +473,7 @@ namespace PdfSharp.Drawing
                 }
             }
             string key = KeyPrefix + familyName.ToLowerInvariant()
-                + (fontResolvingOptions.IsItalic ? "/i" : "/n") // normal / oblique / italic  
+                + (fontResolvingOptions.IsItalic ? "/i" : "/n") // normal / oblique / italic
                 + (fontResolvingOptions.IsBold ? "/700" : "/400") + "/5" // Stretch.Normal
                 + simulationSuffix;
             return key;
@@ -493,13 +491,12 @@ namespace PdfSharp.Drawing
         internal static string ComputeKey(GdiFont gdiFont)
         {
             string name1 = gdiFont.Name;
-            string name2 = gdiFont.OriginalFontName;
-            string name3 = gdiFont.SystemFontName;
+            //string name2 = gdiFont.OriginalFontName;
+            //string name3 = gdiFont.SystemFontName;
 
             string name = name1;
-            GdiFontStyle style = gdiFont.Style;
 
-            string key = KeyPrefix + name.ToLowerInvariant() + ((style & GdiFontStyle.Italic) == GdiFontStyle.Italic ? "/i" : "/n") + ((style & GdiFontStyle.Bold) == GdiFontStyle.Bold ? "/700" : "/400") + "/5"; // Stretch.Normal
+            string key = KeyPrefix + name.ToLowerInvariant() + (gdiFont.IsItalic ? "/i" : "/n") + (gdiFont.IsBold ? "/700" : "/400") + "/5"; // Stretch.Normal
             return key;
         }
 #endif

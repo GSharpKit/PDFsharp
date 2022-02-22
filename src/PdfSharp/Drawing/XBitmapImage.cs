@@ -31,9 +31,7 @@
 #endif
 #if CORE_WITH_GDI
 using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
+using SixLabors.ImageSharp;
 using PdfSharp.Internal;
 
 #endif
@@ -82,7 +80,7 @@ namespace PdfSharp.Drawing
             {
                 Lock.EnterGdiPlus();
                 // Create a default 24 bit ARGB bitmap.
-                _gdiImage = new Bitmap(width, height);
+                _gdiImage = new Image<SixLabors.ImageSharp.PixelFormats.Abgr32>(width, height);
             }
             finally { Lock.ExitGdiPlus(); }
 #endif

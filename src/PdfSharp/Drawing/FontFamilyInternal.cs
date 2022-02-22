@@ -31,8 +31,8 @@ using System.Diagnostics;
 using System.Globalization;
 using PdfSharp.Internal;
 #if CORE || GDI
-using System.Drawing;
-using GdiFontFamily = System.Drawing.FontFamily;
+using SixLabors.Fonts;
+using GdiFontFamily = SixLabors.Fonts.FontFamily;
 #endif
 #if WPF
 using System.Windows.Media;
@@ -66,7 +66,7 @@ namespace PdfSharp.Drawing
 #if CORE || GDI
             if (createPlatformObjects)
             {
-                _gdiFontFamily = new GdiFontFamily(familyName);
+                _gdiFontFamily = SystemFonts.Get(familyName);
                 _name = _gdiFontFamily.Name;
             }
 #endif

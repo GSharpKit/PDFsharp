@@ -18,7 +18,7 @@
     <PackageProjectUrl>https://github.com/CLMSUK/PDFsharp</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="System.Drawing.Common" Version="4.5.0" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\PdfSharp\root\VersionInfo.cs">
@@ -119,9 +119,6 @@
     <EmbeddedResource Include="Resources\Messages.restext" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PdfSharp\PdfSharp.csproj">
-      <Project>{5a6055bc-bf86-4fdd-9f62-0109db7a303b}</Project>
-      <Name>PdfSharp</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\PdfSharp\PdfSharp.csproj" />
   </ItemGroup>
 </Project>

@@ -32,7 +32,8 @@ using System;
 using System.Diagnostics;
 using System.IO;
 #if CORE
-using System.Drawing.Imaging;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Advanced;
 #endif
 #if GDI
 using System.Drawing.Imaging;
@@ -314,7 +315,7 @@ namespace PdfSharp.Pdf.Advanced
 #if CORE_WITH_GDI
                         // No stream, no filename, get image data.
                         // Save the image to a memory stream.
-                        _image._gdiImage.Save(memory, ImageFormat.Jpeg);
+                        _image._gdiImage.SaveAsJpeg(memory);
 #endif
                     }
                 }
@@ -414,7 +415,7 @@ namespace PdfSharp.Pdf.Advanced
 #if CORE_WITH_GDI
             if (_image._importedImage == null)
             {
-                if ((_image._gdiImage.Flags & ((int)ImageFlags.ColorSpaceCmyk | (int)ImageFlags.ColorSpaceYcck)) != 0)
+                /*if ((_image._gdiImage.Flags & ((int)ImageFlags.ColorSpaceCmyk | (int)ImageFlags.ColorSpaceYcck)) != 0)
                 {
                     // TODO: Test with CMYK JPEG files (so far I only found ImageFlags.ColorSpaceYcck JPEG files ...)
                     Elements[Keys.ColorSpace] = new PdfName("/DeviceCMYK");
@@ -425,7 +426,7 @@ namespace PdfSharp.Pdf.Advanced
                 {
                     Elements[Keys.ColorSpace] = new PdfName("/DeviceGray");
                 }
-                else
+                else*/
                 {
                     Elements[Keys.ColorSpace] = new PdfName("/DeviceRGB");
                 }
@@ -511,6 +512,8 @@ namespace PdfSharp.Pdf.Advanced
 #endif
 
 #if (CORE_WITH_GDI || GDI) && !WPF
+            ReadTrueColorMemoryBitmap(3, 8, false);
+            /*
             switch (_image._gdiImage.PixelFormat)
             {
                 case PixelFormat.Format24bppRgb:
@@ -543,7 +546,7 @@ namespace PdfSharp.Pdf.Advanced
           image.image.Save("$$$.bmp", ImageFormat.Bmp);
 #endif
                     throw new NotImplementedException("Image format not supported.");
-            }
+            }*/
 #endif
 #if WPF // && !GDI
 #if !SILVERLIGHT
@@ -836,7 +839,7 @@ namespace PdfSharp.Pdf.Advanced
             int pdfVersion = Owner.Version;
             MemoryStream memory = new MemoryStream();
 #if CORE_WITH_GDI
-            _image._gdiImage.Save(memory, ImageFormat.Bmp);
+            _image._gdiImage.SaveAsBmp(memory);
 #endif
 #if GDI
             _image._gdiImage.Save(memory, ImageFormat.Bmp);
@@ -1034,7 +1037,7 @@ namespace PdfSharp.Pdf.Advanced
 
             MemoryStream memory = new MemoryStream();
 #if CORE_WITH_GDI
-            _image._gdiImage.Save(memory, ImageFormat.Bmp);
+            _image._gdiImage.SaveAsBmp(memory);
 #endif
 #if GDI
             _image._gdiImage.Save(memory, ImageFormat.Bmp);

@@ -34,11 +34,9 @@ using System.Diagnostics;
 using System.Globalization;
 using System.ComponentModel;
 #if CORE || GDI
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using GdiFontFamily = System.Drawing.FontFamily;
-using GdiFont = System.Drawing.Font;
-using GdiFontStyle = System.Drawing.FontStyle;
+using GdiFontFamily = SixLabors.Fonts.FontFamily;
+using GdiFont = SixLabors.Fonts.Font;
+using GdiFontStyle = SixLabors.Fonts.FontStyle;
 #endif
 #if WPF
 using System.Windows.Markup;
@@ -160,10 +158,10 @@ namespace PdfSharp.Drawing
         /// <param name="pdfOptions">Additional PDF options.</param>
         public XFont(GdiFont font, XPdfFontOptions pdfOptions)
         {
-            if (font.Unit != GraphicsUnit.World)
-                throw new ArgumentException("Font must use GraphicsUnit.World.");
+            //if (font.Unit != GraphicsUnit.World)
+            //    throw new ArgumentException("Font must use GraphicsUnit.World.");
             _gdiFont = font;
-            Debug.Assert(font.Name == font.FontFamily.Name);
+            Debug.Assert(font.Name == font.Family.Name);
             _familyName = font.Name;
             _emSize = font.Size;
             _style = FontStyleFrom(font);
@@ -390,7 +388,7 @@ namespace PdfSharp.Drawing
                 if (_gdiFontFamily != null)
                 {
                     // Create font based on its family.
-                    _gdiFont = new Font(_gdiFontFamily, (float)_emSize, (GdiFontStyle)_style, GraphicsUnit.World);
+                    _gdiFont = new GdiFont(_gdiFontFamily, (float)_emSize, (GdiFontStyle)_style);
                 }
 
                 if (_gdiFont != null)
@@ -400,7 +398,7 @@ namespace PdfSharp.Drawing
                     string name2 = _gdiFont.OriginalFontName;
                     string name3 = _gdiFont.SystemFontName;
 #endif
-                    _familyName = _gdiFont.FontFamily.Name;
+                    _familyName = _gdiFont.Family.Name;
                     // TODO: _glyphTypeface = XGlyphTypeface.GetOrCreateFrom(_gdiFont);
                 }
                 else
@@ -704,7 +702,7 @@ namespace PdfSharp.Drawing
 #if DEBUG
                 double value = Font.GetHeight(graphics._gfx);
 
-                // 2355*(0.3/2048)*96 = 33.11719 
+                // 2355*(0.3/2048)*96 = 33.11719
                 double myValue = CellSpace * (_emSize / (96 * UnitsPerEm)) * 96;
                 myValue = CellSpace * _emSize / UnitsPerEm;
                 //Debug.Assert(value == myValue, "??");
@@ -795,15 +793,15 @@ namespace PdfSharp.Drawing
         {
             get { return _gdiFont; }
         }
-        Font _gdiFont;
+        GdiFont _gdiFont;
 
         internal static XFontStyle FontStyleFrom(GdiFont font)
         {
             return
-              (font.Bold ? XFontStyle.Bold : 0) |
-              (font.Italic ? XFontStyle.Italic : 0) |
-              (font.Strikeout ? XFontStyle.Strikeout : 0) |
-              (font.Underline ? XFontStyle.Underline : 0);
+                (font.IsBold ? XFontStyle.Bold : 0) |
+                (font.IsItalic ? XFontStyle.Italic : 0);
+            //(font.Strikeout ? XFontStyle.Strikeout : 0) |
+            //(font.Underline ? XFontStyle.Underline : 0);
         }
 
 #if true || UseGdiObjects

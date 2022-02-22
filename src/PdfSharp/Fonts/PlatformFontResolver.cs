@@ -30,11 +30,9 @@
 using System;
 using System.Diagnostics;
 #if CORE || GDI
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using GdiFontFamily = System.Drawing.FontFamily;
-using GdiFont = System.Drawing.Font;
-using GdiFontStyle = System.Drawing.FontStyle;
+using GdiFontFamily = SixLabors.Fonts.FontFamily;
+using GdiFont = SixLabors.Fonts.Font;
+using GdiFontStyle = SixLabors.Fonts.FontStyle;
 #endif
 #if WPF
 using System.Windows;
@@ -128,8 +126,8 @@ namespace PdfSharp.Fonts
             else
             {
 #if (CORE || GDI) && !WPF
-                bool mustSimulateBold = gdiFont.Bold && !fontSource.Fontface.os2.IsBold;
-                bool mustSimulateItalic = gdiFont.Italic && !fontSource.Fontface.os2.IsItalic;
+                bool mustSimulateBold = gdiFont.IsBold && !fontSource.Fontface.os2.IsBold;
+                bool mustSimulateItalic = gdiFont.IsItalic && !fontSource.Fontface.os2.IsItalic;
                 fontResolverInfo = new PlatformFontResolverInfo(typefaceKey, mustSimulateBold, mustSimulateItalic, gdiFont);
 #endif
 #if WPF && !SILVERLIGHT

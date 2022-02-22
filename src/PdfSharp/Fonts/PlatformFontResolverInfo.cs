@@ -28,9 +28,8 @@
 #endregion
 
 #if CORE || GDI
-using System.Drawing;
-using GdiFont = System.Drawing.Font;
-
+using SixLabors.Fonts;
+using GdiFont = SixLabors.Fonts.Font;
 #endif
 #if WPF
 using System.Windows.Media;

@@ -34,12 +34,10 @@ using System.IO;
 using System.Runtime.InteropServices;
 using PdfSharp.Fonts;
 #if CORE || GDI
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using GdiFontFamily = System.Drawing.FontFamily;
-using GdiFont = System.Drawing.Font;
-using GdiFontStyle = System.Drawing.FontStyle;
-using GdiPrivateFontCollection = System.Drawing.Text.PrivateFontCollection;
+using GdiFontFamily = SixLabors.Fonts.FontFamily;
+using GdiFont = SixLabors.Fonts.Font;
+using GdiFontStyle = SixLabors.Fonts.FontStyle;
+using GdiPrivateFontCollection = SixLabors.Fonts.FontCollection;
 #endif
 #if WPF
 using System.Windows.Markup;
@@ -112,7 +110,7 @@ namespace PdfSharp.Drawing
             // Add to GDI+ PrivateFontCollection
             int length = data.Length;
 
-            // Copy data without unsafe code 
+            // Copy data without unsafe code
             IntPtr ip = Marshal.AllocCoTaskMem(length);
             Marshal.Copy(data, 0, ip, length);
             GetPrivateFontCollection().AddMemoryFont(ip, length);

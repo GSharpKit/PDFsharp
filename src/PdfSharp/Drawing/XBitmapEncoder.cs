@@ -34,9 +34,7 @@ using PdfSharp.Internal;
 #if CORE
 #endif
 #if CORE_WITH_GDI
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
+using SixLabors.ImageSharp;
 #endif
 #if GDI
 using System.Drawing;
@@ -110,7 +108,7 @@ namespace PdfSharp.Drawing
             try
             {
                 Lock.EnterGdiPlus();
-                Source._gdiImage.Save(stream, ImageFormat.Png);
+                Source._gdiImage.SaveAsPng(stream);
             }
             finally { Lock.ExitGdiPlus(); }
 #endif

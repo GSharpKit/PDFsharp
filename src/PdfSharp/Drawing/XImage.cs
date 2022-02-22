@@ -32,7 +32,8 @@ using System.Diagnostics;
 using System.IO;
 using PdfSharp.Pdf;
 #if CORE
-using System.Drawing;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
 #endif
 #if GDI
 using System.Drawing;
@@ -203,7 +204,10 @@ namespace PdfSharp.Drawing
             try
             {
                 Lock.EnterGdiPlus();
-                _gdiImage = Image.FromFile(path);
+                using (Stream file = new FileStream(path, FileMode.Open))
+                {
+                    _gdiImage = Image.Load(file, out _gdiImageFormat);
+                }
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
@@ -246,7 +250,7 @@ namespace PdfSharp.Drawing
             try
             {
                 Lock.EnterGdiPlus();
-                _gdiImage = Image.FromStream(stream);
+                _gdiImage = Image.Load(stream, out _gdiImageFormat);
             }
             finally { Lock.ExitGdiPlus(); }
 #endif
@@ -481,7 +485,7 @@ namespace PdfSharp.Drawing
                 try
                 {
                     Lock.EnterGdiPlus();
-                    guid = _gdiImage.RawFormat.Guid.ToString("B").ToUpper();
+                    guid = "{B96B3CAF-0728-11D3-9D7B-0000F81EF32E}"; //_gdiImage.RawFormat.Guid.ToString("B").ToUpper();
                 }
                 finally
                 {
@@ -912,6 +916,7 @@ namespace PdfSharp.Drawing
                     Lock.EnterGdiPlus();
                     _gdiImage.Dispose();
                     _gdiImage = null;
+                    _gdiImageFormat = null;
                 }
                 finally { Lock.ExitGdiPlus(); }
             }
@@ -1041,7 +1046,7 @@ namespace PdfSharp.Drawing
                 try
                 {
                     Lock.EnterGdiPlus();
-                    return _gdiImage.Width * 72 / _gdiImage.HorizontalResolution;
+                    return _gdiImage.Width * 72 / _gdiImage.Metadata.HorizontalResolution;
                 }
                 finally { Lock.ExitGdiPlus(); }
 #endif
@@ -1095,7 +1100,7 @@ namespace PdfSharp.Drawing
                 try
                 {
                     Lock.EnterGdiPlus();
-                    return _gdiImage.Height * 72 / _gdiImage.HorizontalResolution;
+                    return _gdiImage.Height * 72 / _gdiImage.Metadata.HorizontalResolution;
                 }
                 finally { Lock.ExitGdiPlus(); }
 #endif
@@ -1245,7 +1250,7 @@ namespace PdfSharp.Drawing
                 try
                 {
                     Lock.EnterGdiPlus();
-                    return _gdiImage.HorizontalResolution;
+                    return _gdiImage.Metadata.HorizontalResolution;
                 }
                 finally { Lock.ExitGdiPlus(); }
 #endif
@@ -1294,7 +1299,7 @@ namespace PdfSharp.Drawing
                 try
                 {
                     Lock.EnterGdiPlus();
-                    return _gdiImage.VerticalResolution;
+                    return _gdiImage.Metadata.VerticalResolution;
                 }
                 finally { Lock.ExitGdiPlus(); }
 #endif
@@ -1322,7 +1327,7 @@ namespace PdfSharp.Drawing
         }
 
         /// <summary>
-        /// Gets or sets a flag indicating whether image interpolation is to be performed. 
+        /// Gets or sets a flag indicating whether image interpolation is to be performed.
         /// </summary>
         public virtual bool Interpolate
         {
@@ -1529,6 +1534,7 @@ namespace PdfSharp.Drawing
 #endif
 
 #if CORE_WITH_GDI || GDI
+        internal IImageFormat _gdiImageFormat;
         internal Image _gdiImage;
 #endif
 #if WPF

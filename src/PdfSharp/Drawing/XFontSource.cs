@@ -31,17 +31,17 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Runtime.InteropServices;
 using PdfSharp.Fonts;
 #if CORE || GDI
-using GdiFont = System.Drawing.Font;
-using GdiFontStyle = System.Drawing.FontStyle;
+using GdiFont = SixLabors.Fonts.Font;
+using GdiFontStyle = SixLabors.Fonts.FontStyle;
 #endif
 using PdfSharp.Internal;
 using PdfSharp.Fonts.OpenType;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using SixLabors.Fonts;
 
 namespace PdfSharp.Drawing
 {
@@ -52,7 +52,7 @@ namespace PdfSharp.Drawing
     internal class XFontSource
     {
         // Implementation Notes
-        // 
+        //
         // * XFontSource represents a single font (file) in memory.
         // * An XFontSource hold a reference to it OpenTypeFontface.
         // * To prevent large heap fragmentation this class must exists only once.
@@ -80,7 +80,7 @@ namespace PdfSharp.Drawing
             else
             {
                 // Debian
-                searchingPaths.Add("/usr/share/fonts/truetype");
+                searchingPaths.Add("/usr/share/fonts/gnu-free");
                 //searchingPaths.Add("/usr/share/X11/fonts");
                 //searchingPaths.Add("/usr/X11R6/lib/X11/fonts");
                 //searchingPaths.Add("~/.fonts");
@@ -104,13 +104,16 @@ namespace PdfSharp.Drawing
                 {
                     try
                     {
-                        var fontCollection = new System.Drawing.Text.PrivateFontCollection();
-                        fontCollection.AddFontFile(fileName);
-                        var fontName = fontCollection.Families[0].Name;
-                        if (!FontFilePaths.ContainsKey(fontName))
+                        var fontCollection = new FontCollection();
+                        fontCollection.Add(fileName);
+                        foreach (var family in fontCollection.Families)
                         {
-                            FontFilePaths.Add(fontName, fileName);
-                            Debug.WriteLine($"Add font {fontName}: {fileName}");
+                            var fontName = family.Name;
+                            if (!FontFilePaths.ContainsKey(fontName))
+                            {
+                                FontFilePaths.Add(fontName, fileName);
+                                Debug.WriteLine($"Add font {fontName}: {fileName}");
+                            }
                         }
                     }
                     catch (Exception ex)

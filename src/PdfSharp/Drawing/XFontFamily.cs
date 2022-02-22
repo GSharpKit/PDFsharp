@@ -29,10 +29,9 @@
 
 using System;
 #if CORE || GDI
-using System.Drawing;
-using GdiFont = System.Drawing.Font;
-using GdiFontFamily = System.Drawing.FontFamily;
-using GdiFontStyle = System.Drawing.FontStyle;
+using GdiFont = SixLabors.Fonts.Font;
+using GdiFontFamily = SixLabors.Fonts.FontFamily;
+using GdiFontStyle = SixLabors.Fonts.FontStyle;
 #endif
 #if WPF
 using System.Windows.Media;
@@ -127,7 +126,7 @@ namespace PdfSharp.Drawing
 #if CORE || GDI
         internal static XFontFamily GetOrCreateFromGdi(GdiFont font)
         {
-            FontFamilyInternal fontFamilyInternal = FontFamilyInternal.GetOrCreateFromGdi(font.FontFamily);
+            FontFamilyInternal fontFamilyInternal = FontFamilyInternal.GetOrCreateFromGdi(font.Family);
             return new XFontFamily(fontFamilyInternal);
         }
 #endif
@@ -280,7 +279,7 @@ namespace PdfSharp.Drawing
         }
 
         /// <summary>
-        /// Returns an array that contains all the FontFamily objects available for the specified 
+        /// Returns an array that contains all the FontFamily objects available for the specified
         /// graphics context.
         /// </summary>
         [Obsolete("Use platform API directly.")]
