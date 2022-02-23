@@ -33,7 +33,6 @@ using System.Diagnostics;
 using System.IO;
 #if CORE
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Advanced;
 #endif
 #if GDI
 using System.Drawing.Imaging;

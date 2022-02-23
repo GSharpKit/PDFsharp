@@ -34,6 +34,7 @@ using PdfSharp.Pdf;
 #if CORE
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Processing;
 #endif
 #if GDI
 using System.Drawing;
@@ -207,6 +208,7 @@ namespace PdfSharp.Drawing
                 using (Stream file = new FileStream(path, FileMode.Open))
                 {
                     _gdiImage = Image.Load(file, out _gdiImageFormat);
+                    _gdiImage.Mutate(x => x.BackgroundColor(Color.White));
                 }
             }
             finally { Lock.ExitGdiPlus(); }
@@ -251,6 +253,7 @@ namespace PdfSharp.Drawing
             {
                 Lock.EnterGdiPlus();
                 _gdiImage = Image.Load(stream, out _gdiImageFormat);
+                _gdiImage.Mutate(x => x.BackgroundColor(Color.White));
             }
             finally { Lock.ExitGdiPlus(); }
 #endif

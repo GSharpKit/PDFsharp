@@ -52,7 +52,7 @@ namespace PdfSharp.Drawing
     internal class XFontSource
     {
         // Implementation Notes
-        //
+        // 
         // * XFontSource represents a single font (file) in memory.
         // * An XFontSource hold a reference to it OpenTypeFontface.
         // * To prevent large heap fragmentation this class must exists only once.
@@ -80,7 +80,18 @@ namespace PdfSharp.Drawing
             else
             {
                 // Debian
-                searchingPaths.Add("/usr/share/fonts/gnu-free");
+                if (Directory.Exists("/usr/share/fonts/truetype"))
+                    searchingPaths.Add("/usr/share/fonts/truetype");
+
+                // Fedora
+                if (Directory.Exists("/usr/share/fonts"))
+                {
+                    var fontdirs = Directory.GetDirectories("/usr/share/fonts");
+                    foreach (string fontdir in fontdirs)
+                    {
+                        searchingPaths.Add(fontdir);
+                    }
+                }
                 //searchingPaths.Add("/usr/share/X11/fonts");
                 //searchingPaths.Add("/usr/X11R6/lib/X11/fonts");
                 //searchingPaths.Add("~/.fonts");
